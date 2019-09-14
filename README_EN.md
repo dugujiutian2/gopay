@@ -307,7 +307,7 @@ fmt.Println("Watermark:", phone.Watermark)
 rsp := new(gopay.WeChatNotifyResponse) // the struct return WeChat Platform
 
 rsp.ReturnCode = gopay.SUCCESS
-rsp.ReturnMsg = gopay.OK
+rsp.ReturnMsg = "OK"
 
 return c.String(http.StatusOK, rsp.ToXmlString())
 ```
@@ -331,7 +331,7 @@ body.Set("out_trade_no", number)
 body.Set("total_fee", 1)
 body.Set("spbill_create_ip", "127.0.0.1")
 body.Set("notify_url", "http://www.gopay.ink")
-body.Set("trade_type", gopay.TradeType_H5)
+body.Set("trade_type", wechat.TradeType_H5)
 body.Set("device_info", "WEB")
 body.Set("sign_type", gopay.SignType_MD5)
 

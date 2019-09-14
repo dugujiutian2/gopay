@@ -38,22 +38,22 @@
 
 ### 微信公共API
 
-* gopay.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
-* gopay.GetWeChatSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
-* gopay.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
-* gopay.GetH5PaySign() => 获取微信内H5支付所需要的paySign
-* gopay.GetAppPaySign() => 获取APP支付所需要的paySign
-* gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
-* gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
-* gopay.VerifyWeChatSign() => 微信同步返回参数验签或异步通知参数验签
-* gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
-* gopay.GetWeChatAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
-* gopay.GetWeChatAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
-* gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
-* gopay.DecryptWeChatOpenDataToStruct() => 加密数据，解密到指定结构体
-* gopay.GetOpenIdByAuthCode() => 授权码查询openid
-* gopay.GetAppWeChatLoginAccessToken() => App应用微信第三方登录，code换取access_token
-* gopay.RefreshAppWeChatLoginAccessToken() => 刷新App应用微信第三方登录后，获取的 access_token
+* wechat.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+* wechat.GetWeChatSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+* wechat.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
+* wechat.GetH5PaySign() => 获取微信内H5支付所需要的paySign
+* wechat.GetAppPaySign() => 获取APP支付所需要的paySign
+* wechat.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
+* wechat.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
+* wechat.VerifyWeChatSign() => 微信同步返回参数验签或异步通知参数验签
+* wechat.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
+* wechat.GetWeChatAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
+* wechat.GetWeChatAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
+* wechat.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
+* wechat.DecryptWeChatOpenDataToStruct() => 加密数据，解密到指定结构体
+* wechat.GetOpenIdByAuthCode() => 授权码查询openid
+* wechat.GetAppWeChatLoginAccessToken() => App应用微信第三方登录，code换取access_token
+* wechat.RefreshAppWeChatLoginAccessToken() => 刷新App应用微信第三方登录后，获取的 access_token
 
 ---
 
@@ -84,13 +84,13 @@
 
 ### 支付宝公共API
 
-* gopay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_root_cert_sn、alipay_cert_sn）
-* gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
-* gopay.FormatPrivateKey() => 格式化应用私钥
-* gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
-* gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
-* gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
-* gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
+* alipay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_root_cert_sn、alipay_cert_sn）
+* alipay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
+* alipay.FormatPrivateKey() => 格式化应用私钥
+* alipay.FormatAliPayPublicKey() => 格式化支付宝公钥
+* alipay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
+* alipay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
+* alipay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 一、安装
 
@@ -140,11 +140,11 @@ QQ群：
 client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
 //设置国家：不设置默认 中国国内
-//    gopay.China：中国国内
-//    gopay.China2：中国国内备用
-//    gopay.SoutheastAsia：东南亚
-//    gopay.Other：其他国家
-client.SetCountry(gopay.China)
+//    wechat.China：中国国内
+//    wechat.China2：中国国内备用
+//    wechat.SoutheastAsia：东南亚
+//    wechat.Other：其他国家
+client.SetCountry(wechat.China)
 ```
 
 * #### 支付宝，如无需更改Appid和PrivateKey，推荐在 init()方法中初始化，全局适用
@@ -167,7 +167,7 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetCertSN() 获取
     SetAppCertSN().                         //设置应用公钥证书SN，通过 gopay.GetCertSN() 获取
     SetCharset("utf-8").                    //设置字符编码，不设置默认 utf-8
-    SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
+    SetSignType(alipay.SignType_RSA2).      //设置签名类型，不设置默认 RSA2
     SetReturnUrl("https://www.gopay.ink").  //设置返回URL
     SetNotifyUrl("https://www.gopay.ink").  //设置异步通知URL
     SetAppAuthToken().                      //设置第三方应用授权
@@ -188,9 +188,9 @@ bm.Set("out_trade_no", number)
 bm.Set("total_fee", 1)
 bm.Set("spbill_create_ip", "127.0.0.1")
 bm.Set("notify_url", "http://www.gopay.ink")
-bm.Set("trade_type", gopay.TradeType_Mini)
+bm.Set("trade_type", wechat.TradeType_Mini)
 bm.Set("device_info", "WEB")
-bm.Set("sign_type", gopay.SignType_MD5)
+bm.Set("sign_type", wechat.SignType_MD5)
 bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 
 //嵌套json格式数据（例如：H5支付的 scene_info 参数）
@@ -206,7 +206,7 @@ bm.Set("scene_info", sceneInfo)
 
 //参数 sign ，可单独生成赋值到BodyMap中；也可不传sign参数，client内部会自动获取
 //如需单独赋值 sign 参数，需通过下面方法，最后获取sign值并在最后赋值此参数
-sign := gopay.GetWeChatParamSign("wxdaa2ab9ef87b5497", mchId, apiKey, body)
+sign := wechat.GetWeChatParamSign("wxdaa2ab9ef87b5497", mchId, apiKey, body)
 //sign, _ := gopay.GetWeChatSanBoxParamSign("wxdaa2ab9ef87b5497", mchId, apiKey, body)
 bm.Set("sign", sign)
 ```
@@ -294,7 +294,7 @@ prepayId := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一�
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
 //    apiKey：API秘钥值
-paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, prepayId, gopay.SignType_MD5, timeStamp, apiKey)
+paySign := wechat.GetMiniPaySign(AppID, wxRsp.NonceStr, prepayId, wechat.SignType_MD5, timeStamp, apiKey)
 
 //====APP支付 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
@@ -307,7 +307,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
 //    apiKey：API秘钥值
-paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, wxRsp.PrepayId, gopay.SignType_MD5, timeStamp, apiKey)
+paySign := wechat.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, wxRsp.PrepayId, wechat.SignType_MD5, timeStamp, apiKey)
 
 //====微信内H5支付 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
@@ -319,7 +319,7 @@ packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一�
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
 //    apiKey：API秘钥值
-paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, apiKey)
+paySign := wechat.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_MD5, timeStamp, apiKey)
 ```
 
 ## 5、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
@@ -340,21 +340,21 @@ wxRsp, err := client.UnifiedOrder(bm)
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数 ok：是否验签通过
 //    返回参数 err：错误信息
-ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, wxRsp)
+ok, err := wechat.VerifyWeChatSign(apiKey, wechat.SignType_MD5, wxRsp)
 
 //====异步通知参数解析和验签Sign====
 //解析异步通知的参数
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := gopay.ParseWeChatNotifyResult(c.Request())    //c.Request()是 echo 框架的获取 *http.Request 的写法
+notifyReq, err := wechat.ParseWeChatNotifyResult(c.Request())    //c.Request()是 echo 框架的获取 *http.Request 的写法
 //验签操作
-ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, notifyReq)
+ok, err := wechat.VerifyWeChatSign(apiKey, wechat.SignType_MD5, notifyReq)
 
 //==异步通知，返回给微信平台的信息==
-rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
+rsp := new(wechat.WeChatNotifyResponse) //回复微信的数据
 rsp.ReturnCode = gopay.SUCCESS
-rsp.ReturnMsg = gopay.OK
+rsp.ReturnMsg = "OK"
 return c.String(http.StatusOK, rsp.ToXmlString())   //此写法是 echo 框架返回客户端数据的写法
 ```
 
@@ -375,16 +375,16 @@ aliRsp, err := client.AliPayTradePay(bm)
 //    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不要传此参数，否则会出错。
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
+ok, err := alipay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
 
 //====异步通知参数解析和验签Sign====
 //解析异步通知的参数
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err = gopay.ParseAliPayNotifyResult(c.Request())     //c.Request()是 echo 框架的获取
+notifyReq, err = alipay.ParseAliPayNotifyResult(c.Request())     //c.Request()是 echo 框架的获取
 //验签操作
-ok, err = gopay.VerifyAliPaySign(alipayPublicKey, notifyReq)
+ok, err = alipay.VerifyAliPaySign(alipayPublicKey, notifyReq)
 
 //==异步通知，返回支付宝平台的信息==
 //    文档：https://docs.open.alipay.com/203/105286
@@ -406,7 +406,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 //    appId：微信小程序的APPID
 //    appSecret：微信小程序的AppSecret
 //    wxCode：小程序调用wx.login 获取的code
-sessionRsp, err := gopay.Code2Session(appId, appSecret, wxCode)
+sessionRsp, err := wechat.Code2Session(appId, appSecret, wxCode)
 
 //====解密微信加密数据到指定结构体====
 
@@ -414,13 +414,13 @@ sessionRsp, err := gopay.Code2Session(appId, appSecret, wxCode)
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 session := "lyY4HPQbaOYzZdG+JcYK9w=="
-phone := new(gopay.WeChatUserPhone)
+phone := new(wechat.WeChatUserPhone)
 //解密开放数据
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过 gopay.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
-err := gopay.DecryptWeChatOpenDataToStruct(data, iv, session, phone)
+err := wechat.DecryptWeChatOpenDataToStruct(data, iv, session, phone)
 fmt.Println(*phone)
 
 //获取微信小程序用户信息
@@ -429,9 +429,9 @@ encryptedData := "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTya
 iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 //微信小程序 用户信息
-userInfo := new(gopay.WeChatAppletUserInfo)
+userInfo := new(wechat.WeChatAppletUserInfo)
 
-err = gopay.DecryptWeChatOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
+err = wechat.DecryptWeChatOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
 fmt.Println(*userInfo)
 ```
 
@@ -448,16 +448,16 @@ fmt.Println(*userInfo)
 //    privateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
-rsp, err := gopay.AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken)
+rsp, err := alipay.AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken)
 
 //解密支付宝开放数据带到指定结构体
 //    以小程序获取手机号为例
-phone := new(gopay.AliPayUserPhone)
+phone := new(alipay.AliPayUserPhone)
 //解密支付宝开放数据
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
-err := gopay.DecryptAliPayOpenDataToStruct(encryptedData, secretKey, phone)
+err := alipay.DecryptAliPayOpenDataToStruct(encryptedData, secretKey, phone)
 fmt.Println(*phone)
 ```
 
