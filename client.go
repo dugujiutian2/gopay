@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gopay/union"
 	"github.com/iGoogle-ink/gopay/wechat"
 )
 
@@ -28,6 +29,16 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *alipay.AliP
 	client = new(alipay.AliPayClient)
 	client.AppId = appId
 	client.PrivateKey = privateKey
+	client.IsProd = isProd
+	return client
+}
+
+//初始化银联支付客户端
+//    merId：商户ID
+//    isProd：是否是正式环境
+func NewUnionPayClient(merId string, isProd bool) (client *union.UnionPayClient) {
+	client = new(union.UnionPayClient)
+	client.MerId = merId
 	client.IsProd = isProd
 	return client
 }
