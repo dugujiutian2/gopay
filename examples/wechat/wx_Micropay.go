@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func Micropay() {
@@ -23,9 +24,9 @@ func Micropay() {
 	body.Set("total_fee", 1)
 	body.Set("spbill_create_ip", "127.0.0.1")
 	body.Set("auth_code", "134595229789828537")
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 
-	sign := gopay.GetWeChatParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
+	sign := wechat.GetWeChatParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
 	//sign, _ := gopay.GetWeChatSanBoxParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
 
 	body.Set("sign", sign)
@@ -37,7 +38,7 @@ func Micropay() {
 	}
 	fmt.Println("Response:", *wxRsp)
 
-	ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, wxRsp)
+	ok, err := wechat.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, wxRsp)
 	if err != nil {
 		fmt.Println("err:", err)
 	}

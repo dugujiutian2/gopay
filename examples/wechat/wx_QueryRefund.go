@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func QueryRefund() {
@@ -20,7 +21,7 @@ func QueryRefund() {
 	//body.Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	//body.Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 
 	//请求申请退款
 	wxRsp, err := client.QueryRefund(body)

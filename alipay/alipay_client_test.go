@@ -1,8 +1,9 @@
-package gopay
+package alipay
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/iGoogle-ink/gopay"
 	"strings"
 	"testing"
 )
@@ -35,7 +36,7 @@ type People struct {
 }
 
 func TestAliPayParams(t *testing.T) {
-	bodyMap := make(BodyMap)
+	bodyMap := make(gopay.BodyMap)
 
 	//people := new(People)
 	//people.Name = "Jerry"

@@ -1,4 +1,4 @@
-package gopay
+package wechat
 
 type WeChatUnifiedOrderResponse struct {
 	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`

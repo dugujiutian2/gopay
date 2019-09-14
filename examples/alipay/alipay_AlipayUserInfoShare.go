@@ -3,6 +3,7 @@ package alipay
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 func AlipayUserInfoShare() {
@@ -25,7 +26,7 @@ func AlipayUserInfoShare() {
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
-	ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	ok, err := alipay.VerifyAliPaySign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
 		fmt.Println("VerifyAliPaySign-err:", err)
 		return

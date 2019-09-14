@@ -1,4 +1,4 @@
-package gopay
+package wechat
 
 import (
 	"crypto/hmac"
@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"github.com/iGoogle-ink/gopay"
 	"strings"
 )
 
@@ -32,7 +33,7 @@ func (this *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 }
 
 //获取微信支付正式环境Sign值
-func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign string) {
+func getWeChatReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	signStr := bm.EncodeWeChatSignParams(apiKey)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
@@ -50,10 +51,10 @@ func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign stri
 }
 
 //获取微信支付沙箱环境Sign值
-func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err error) {
+func getWeChatSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 
 	//从微信接口获取SanBox的ApiKey
-	sanBoxApiKey, err := getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5)
+	sanBoxApiKey, err := getSanBoxKey(mchId, gopay.GetRandomString(32), apiKey, SignType_MD5)
 	if err != nil {
 		return null, err
 	}
@@ -68,7 +69,7 @@ func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err er
 
 //从微信提供的接口获取：SandboxSignKey
 func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
-	body := make(BodyMap)
+	body := make(gopay.BodyMap)
 	body.Set("mch_id", mchId)
 	body.Set("nonce_str", nonceStr)
 
@@ -84,14 +85,14 @@ func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err err
 
 //从微信提供的接口获取：SandboxSignkey
 func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
-	reqs := make(BodyMap)
+	reqs := make(gopay.BodyMap)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", nonceStr)
 	reqs.Set("sign", sign)
 
 	reqXml := generateXml(reqs)
 	//fmt.Println("req:::", reqXml)
-	_, byteList, errorList := HttpAgent().
+	_, byteList, errorList := gopay.HttpAgent().
 		Post(wx_SanBox_GetSignKey).
 		Type("xml").
 		SendString(reqXml).EndBytes()
@@ -110,7 +111,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 }
 
 //生成请求XML的Body体
-func generateXml(bm BodyMap) (reqXml string) {
+func generateXml(bm gopay.BodyMap) (reqXml string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml>")
 

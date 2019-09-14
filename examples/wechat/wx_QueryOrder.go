@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func QueryOrder() {
@@ -17,7 +18,7 @@ func QueryOrder() {
 	body := make(gopay.BodyMap)
 	body.Set("out_trade_no", "GW201908091551421156")
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 
 	//请求订单查询，成功后得到结果
 	wxRsp, err := client.QueryOrder(body)

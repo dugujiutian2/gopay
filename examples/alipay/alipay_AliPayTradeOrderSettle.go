@@ -3,6 +3,7 @@ package alipay
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 func AliPayTradeOrderSettle() {
@@ -20,8 +21,8 @@ func AliPayTradeOrderSettle() {
 	body.Set("out_request_no", "201907301518083384")
 	body.Set("trade_no", "2019072522001484690549776067")
 
-	var listParams []gopay.OpenApiRoyaltyDetailInfoPojo
-	listParams = append(listParams, gopay.OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
+	var listParams []alipay.OpenApiRoyaltyDetailInfoPojo
+	listParams = append(listParams, alipay.OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	body.Set("royalty_parameters", listParams)
 	fmt.Println("listParams:", body.Get("royalty_parameters"))

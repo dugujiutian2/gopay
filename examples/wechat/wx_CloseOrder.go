@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func CloseOrder() {
@@ -17,7 +18,7 @@ func CloseOrder() {
 	body := make(gopay.BodyMap)
 	body.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 
 	//请求关闭订单，成功后得到结果
 	wxRsp, err := client.CloseOrder(body)

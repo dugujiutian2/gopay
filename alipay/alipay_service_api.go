@@ -1,4 +1,4 @@
-package gopay
+package alipay
 
 import (
 	"crypto"
@@ -13,6 +13,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"github.com/iGoogle-ink/gopay"
 	"github.com/tjfoc/gmsm/sm2"
 	"hash"
 	"io/ioutil"
@@ -88,7 +89,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 //    返回参数ok：是否验证通过
 //    返回参数err：错误信息
 func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyRequest) (ok bool, err error) {
-	body := make(BodyMap)
+	body := make(gopay.BodyMap)
 	body.Set("notify_time", notifyReq.NotifyTime)
 	body.Set("notify_type", notifyReq.NotifyType)
 	body.Set("notify_id", notifyReq.NotifyId)
@@ -118,11 +119,11 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	body.Set("gmt_payment", notifyReq.GmtPayment)
 	body.Set("gmt_refund", notifyReq.GmtRefund)
 	body.Set("gmt_close", notifyReq.GmtClose)
-	body.Set("fund_bill_list", jsonToString(notifyReq.FundBillList))
+	body.Set("fund_bill_list", gopay.JsonToString(notifyReq.FundBillList))
 	body.Set("passback_params", notifyReq.PassbackParams)
-	body.Set("voucher_detail_list", jsonToString(notifyReq.VoucherDetailList))
+	body.Set("voucher_detail_list", gopay.JsonToString(notifyReq.VoucherDetailList))
 
-	newBody := make(BodyMap)
+	newBody := make(gopay.BodyMap)
 	for k, v := range body {
 		if v != null {
 			newBody.Set(k, v)
@@ -173,7 +174,7 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		bodySignType string
 		pKey         string
 		signData     string
-		bm           BodyMap
+		bm           gopay.BodyMap
 		bs           []byte
 	)
 	if len(syncSign) > 0 {
@@ -188,7 +189,7 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		return false, fmt.Errorf("json.Marshal：%v", err.Error())
 	}
 
-	bm = make(BodyMap)
+	bm = make(gopay.BodyMap)
 	err = json.Unmarshal(bs, &bm)
 	if err != nil {
 		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
@@ -246,22 +247,6 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	h.Write([]byte(signData))
 
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
-}
-
-func jsonToString(v interface{}) (str string) {
-	if v == nil {
-		return null
-	}
-	bs, err := json.Marshal(v)
-	if err != nil {
-		//fmt.Println("err:", err)
-		return null
-	}
-	s := string(bs)
-	if s == null {
-		return null
-	}
-	return s
 }
 
 //格式化 普通应用秘钥
@@ -400,7 +385,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	blockMode.CryptBlocks(originData, secretData)
 
 	if len(originData) > 0 {
-		originData = PKCS5UnPadding(originData)
+		originData = gopay.PKCS5UnPadding(originData)
 	}
 	//fmt.Println("originDataStr:", string(originData))
 	//解析
@@ -413,13 +398,13 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 
 //换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
-//    privateKey：应用私钥
+//    PrivateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
 //    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
 func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AliPaySystemOauthTokenResponse, err error) {
 	var bs []byte
-	body := make(BodyMap)
+	body := make(gopay.BodyMap)
 	if "authorization_code" == grantType {
 		body.Set("grant_type", "authorization_code")
 		body.Set("code", codeOrToken)
@@ -448,14 +433,14 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 }
 
 //向支付宝发送请求
-func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
+func aliPaySystemOauthToken(appId, privateKey string, body gopay.BodyMap, method string, isProd bool) (bytes []byte, err error) {
 	//===============生成参数===================
 	body.Set("app_id", appId)
 	body.Set("method", method)
 	body.Set("format", "JSON")
 	body.Set("charset", "utf-8")
 	body.Set("sign_type", "RSA2")
-	body.Set("timestamp", time.Now().Format(TimeLayout))
+	body.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	body.Set("version", "1.0")
 	//===============获取签名===================
 	pKey := FormatPrivateKey(privateKey)
@@ -469,7 +454,7 @@ func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method strin
 	urlParam := FormatAliPayURLParam(body)
 
 	var url string
-	agent := HttpAgent()
+	agent := gopay.HttpAgent()
 	if !isProd {
 		//沙箱环境
 		url = zfb_sanbox_base_url_utf8

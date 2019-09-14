@@ -1,10 +1,11 @@
-package gopay
+package wechat
 
 import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/iGoogle-ink/gopay"
 	"strings"
 	"testing"
 )
@@ -67,7 +68,7 @@ func TestVerifyWeChatResponseSign(t *testing.T) {
 	student.Sign = "544E55ED43B787B945FF0BF8344A4D69"
 	student.Phone = "18017448610"
 
-	maps := make(BodyMap)
+	maps := make(gopay.BodyMap)
 	maps["name"] = "Jerry"
 	maps["age"] = 1
 	maps["sign"] = "544E55ED43B787B945FF0BF8344A4D69"

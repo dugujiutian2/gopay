@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func DownloadBill() {
@@ -16,7 +17,7 @@ func DownloadBill() {
 	//初始化参数结构体
 	body := make(gopay.BodyMap)
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 	body.Set("bill_date", "20190722")
 	body.Set("bill_type", "ALL")
 

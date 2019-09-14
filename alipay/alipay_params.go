@@ -1,4 +1,4 @@
-package gopay
+package alipay
 
 import (
 	"crypto"
@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"github.com/iGoogle-ink/gopay"
 	"hash"
 	"net/url"
 )
@@ -95,7 +96,7 @@ func (this *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) 
 }
 
 //获取参数签名
-func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error) {
+func getRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		h              hash.Hash
 		key            *rsa.PrivateKey
@@ -144,7 +145,7 @@ func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error
 }
 
 //格式化请求URL参数
-func FormatAliPayURLParam(body BodyMap) (urlParam string) {
+func FormatAliPayURLParam(body gopay.BodyMap) (urlParam string) {
 	v := url.Values{}
 	for key, value := range body {
 		v.Add(key, value.(string))

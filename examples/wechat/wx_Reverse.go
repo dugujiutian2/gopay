@@ -3,6 +3,7 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func Reverse() {
@@ -17,7 +18,7 @@ func Reverse() {
 	body := make(gopay.BodyMap)
 	body.Set("nonce_str", gopay.GetRandomString(32))
 	body.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 
 	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.Reverse(body, "", "", "")

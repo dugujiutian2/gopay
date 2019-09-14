@@ -1,4 +1,4 @@
-package gopay
+package alipay
 
 type AliPayNotifyRequest struct {
 	NotifyTime        string                  `json:"notify_time,omitempty"`

@@ -2,8 +2,8 @@ package gopay
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"io"
 	"math/rand"
@@ -59,7 +59,7 @@ func (bm BodyMap) Get(key string) string {
 	if ok2 {
 		return value.(string)
 	}
-	return jsonToString(value)
+	return JsonToString(value)
 }
 
 //删除参数
@@ -84,7 +84,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	var value string
 	for k, v := range bm {
 		//验证参数类型
-		fmt.Println("k:", k)
+		//fmt.Println("k:", k)
 		vKind := reflect.ValueOf(v).Kind()
 		//fmt.Println("vKind:", vKind)
 		switch vKind {
@@ -120,6 +120,22 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		//(*bm)[e.XMLName.Local] = e.Value
 	}
 	return nil
+}
+
+func JsonToString(v interface{}) (str string) {
+	if v == nil {
+		return null
+	}
+	bs, err := json.Marshal(v)
+	if err != nil {
+		//fmt.Println("err:", err)
+		return null
+	}
+	s := string(bs)
+	if s == null {
+		return null
+	}
+	return s
 }
 
 // ("bar=baz&foo=quux") sorted by key.
@@ -184,29 +200,6 @@ func GetRandomString(length int) string {
 //解析时间
 func ParseDateTime(timeStr string) (datetime time.Time) {
 	datetime, _ = time.ParseInLocation(TimeLayout, timeStr, time.Local)
-	return
-}
-
-//格式化Datetime
-func FormatDateTime(timeStr string) (formatTime string) {
-	//2019-01-04T15:40:00Z
-	//2019-01-18 20:51:30+08:00
-	if timeStr == null {
-		return null
-	}
-	replace := strings.Replace(timeStr, "T", " ", 1)
-	formatTime = replace[:19]
-	return
-}
-
-//格式化
-func FormatDate(dateStr string) (formatDate string) {
-	//2020-12-30T00:00:00+08:00
-	if dateStr == null {
-		return null
-	}
-	split := strings.Split(dateStr, "T")
-	formatDate = split[0]
 	return
 }
 
