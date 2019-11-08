@@ -1,6 +1,9 @@
 package gopay
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 // toney 扩展接口
 // --------------------------------------------------------------------------------
@@ -92,13 +95,37 @@ func (a *AliPayClient) UserCertifyOpenInitialize(body BodyMap) (resp UserCertify
 }
 
 // UserCertifyOpenCertify 身份认证开始认证 https://docs.open.alipay.com/api_2/alipay.user.certify.open.certify
-func (a *AliPayClient) UserCertifyOpenCertify(body BodyMap) (resp UserCertifyOpenCertifyRsp, err error) {
-	var bs []byte
-	if bs, err = a.doAliPay(body, "alipay.user.certify.open.certify"); err != nil {
+func (a *AliPayClient) UserCertifyOpenCertify(param map[string]string) (result []byte, err error) {
+	pubBody := make(BodyMap)
+	pubBody.Set("app_id", a.AppId)
+	pubBody.Set("method", "alipay.user.certify.open.certify")
+	pubBody.Set("format", "JSON")
+	pubBody.Set("charset", "utf-8")
+	pubBody.Set("sign_type", "RSA2")
+	pubBody.Set("timestamp", time.Now().Format("2006-01-02 15:04:05"))
+	pubBody.Set("version", "1.0")
+	if a.AppCertSN != "" {
+		pubBody.Set("app_cert_sn", a.AppCertSN)
+	}
+	if a.AlipayRootCertSN != "" {
+		pubBody.Set("alipay_root_cert_sn", a.AlipayRootCertSN)
+	}
+	bytes, err := json.Marshal(param)
+	if err != nil {
+		return nil, err
+	}
+	pubBody.Set("biz_content", string(bytes))
+	var sign string
+	if sign, err = getRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey)); err != nil {
 		return
 	}
-	err = json.Unmarshal(bs,&resp)
-	return
+	pubBody.Set("sign", sign)
+	urlParam := FormatAliPayURLParam(pubBody)
+	if !a.IsProd {
+		return []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
+	} else {
+		return []byte(zfbBaseUrl + "?" + urlParam), nil
+	}
 }
 
 // UserCertifyOpenQuery 身份认证记录查询 https://docs.open.alipay.com/api_2/alipay.user.certify.open.query/
