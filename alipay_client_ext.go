@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -83,49 +84,74 @@ type UserCertifyOpenQueryRsp struct {
 	Sign string `json:"sign"`
 }
 
-
 // UserCertifyOpenInitialize 身份认证初始化服务 https://docs.open.alipay.com/api_2/alipay.user.certify.open.initialize
 func (a *AliPayClient) UserCertifyOpenInitialize(body BodyMap) (resp UserCertifyOpenInitializeRsp, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(body, "alipay.user.certify.open.initialize"); err != nil {
 		return
 	}
-	err = json.Unmarshal(bs,&resp)
+	err = json.Unmarshal(bs, &resp)
 	return
 }
 
 // UserCertifyOpenCertify 身份认证开始认证 https://docs.open.alipay.com/api_2/alipay.user.certify.open.certify
-func (a *AliPayClient) UserCertifyOpenCertify(param map[string]string) (result []byte, err error) {
+func (a *AliPayClient) UserCertifyOpenCertify(body BodyMap) (result []byte, err error) {
+	var (
+		bodyStr, sign, urlParam string
+		bodyBs                  []byte
+	)
+
 	pubBody := make(BodyMap)
 	pubBody.Set("app_id", a.AppId)
 	pubBody.Set("method", "alipay.user.certify.open.certify")
 	pubBody.Set("format", "JSON")
-	pubBody.Set("charset", "utf-8")
-	pubBody.Set("sign_type", "RSA2")
-	pubBody.Set("timestamp", time.Now().Format("2006-01-02 15:04:05"))
-	pubBody.Set("version", "1.0")
-	if a.AppCertSN != "" {
+	if body != nil {
+		if bodyBs, err = json.Marshal(body); err != nil {
+			return nil, fmt.Errorf("json.Marshal：%v", err.Error())
+		}
+		bodyStr = string(bodyBs)
+	}
+	if a.AppCertSN != null {
 		pubBody.Set("app_cert_sn", a.AppCertSN)
 	}
-	if a.AlipayRootCertSN != "" {
+	if a.AlipayRootCertSN != null {
 		pubBody.Set("alipay_root_cert_sn", a.AlipayRootCertSN)
 	}
-	bytes, err := json.Marshal(param)
-	if err != nil {
-		return nil, err
+	if a.ReturnUrl != null {
+		pubBody.Set("return_url", a.ReturnUrl)
 	}
-	pubBody.Set("biz_content", string(bytes))
-	var sign string
+	if a.Charset == null {
+		pubBody.Set("charset", "utf-8")
+	} else {
+		pubBody.Set("charset", a.Charset)
+	}
+	if a.SignType == null {
+		pubBody.Set("sign_type", "RSA2")
+	} else {
+		pubBody.Set("sign_type", a.SignType)
+	}
+	pubBody.Set("timestamp", time.Now().Format(TimeLayout))
+	pubBody.Set("version", "1.0")
+	if a.AppAuthToken != null {
+		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if a.AuthToken != null {
+		pubBody.Set("auth_token", a.AuthToken)
+	}
+	if bodyStr != null {
+		pubBody.Set("biz_content", bodyStr)
+	}
 	if sign, err = getRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey)); err != nil {
 		return
 	}
 	pubBody.Set("sign", sign)
-	urlParam := FormatAliPayURLParam(pubBody)
+	urlParam = FormatAliPayURLParam(pubBody)
 	if !a.IsProd {
-		return []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
+		result,err = []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
 	} else {
-		return []byte(zfbBaseUrl + "?" + urlParam), nil
+		result,err = []byte(zfbBaseUrl + "?" + urlParam), nil
 	}
+	return
 }
 
 // UserCertifyOpenQuery 身份认证记录查询 https://docs.open.alipay.com/api_2/alipay.user.certify.open.query/
@@ -134,6 +160,6 @@ func (a *AliPayClient) UserCertifyOpenQuery(body BodyMap) (resp UserCertifyOpenQ
 	if bs, err = a.doAliPay(body, "alipay.user.certify.open.query"); err != nil {
 		return
 	}
-	err = json.Unmarshal(bs,&resp)
+	err = json.Unmarshal(bs, &resp)
 	return
 }
